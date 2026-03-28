@@ -6,9 +6,15 @@ const SearchFilter = () => {
     const [data, setData] = useState<any[]>([])
     const [searchValue, setSearchValue] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState(null)
+    const [error, setError] = useState<Error | null>(null)
 
     useEffect(() => {
+        if (!searchValue.trim()) {
+            setData([])
+            setError(null)
+            return
+        }
+
         let controller: AbortController
         const debounceInput = setTimeout(() => {
             controller = new AbortController()
@@ -17,9 +23,7 @@ const SearchFilter = () => {
             fetch(`https://restcountries.com/v3.1/name/${searchValue}`, { signal: controller.signal })
                 .then(async res => {
                     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-                    const text = await res.text(); // read as plain text first
-                    return JSON.parse(text); // then parse manually
+                    return res.json()
                 })
                 .then(res => {
                     setError(null)
