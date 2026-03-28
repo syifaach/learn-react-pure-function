@@ -26,7 +26,6 @@ const SearchFilter = () => {
                     setData(res)
                 })
                 .catch(err => {
-                    console.log('error name:', err.name, 'message:', err.message); // 👈
                     if (err.name === 'AbortError') {
                         setError(null)
                         return
@@ -46,8 +45,6 @@ const SearchFilter = () => {
         const { value } = e.target
         setSearchValue(value)
     }
-
-    console.log('data', data, 'err', error)
 
     return (
         <div className="flex flex-col gap-2">
